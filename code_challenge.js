@@ -24,7 +24,7 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
                 totalRevenue += item.total_value;
             }
         });
-        console.log('Total Revenue: $', totalRevenue);
+        console.log(`Total Revenue: $${totalRevenue}`);
 
     // Extract expense values and sum:
         data.data.forEach(item => {
@@ -32,7 +32,7 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
                 totalExpenses += item.total_value;
             }
         });
-        console.log('Total Expenses: $', totalExpenses);
+        console.log(`Total Expenses: $${totalExpenses}`);
     
     // Extract and sum sales and debit values to divide by revenue:
         data.data.forEach(item => {
@@ -41,12 +41,12 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
             }
         });
         const grossMargin = salesAndDebit / totalRevenue;
-        console.log('Gross Profit Margin:', grossMargin.toFixed(1), '%');
+        console.log(`Gross Profit Margin: ${grossMargin.toFixed(1)}%`);
 
     // Parse known values to calulate Net Profit Margin:
         const netProfit = totalRevenue - totalExpenses;
         const netMarginPercentage = (netProfit / totalRevenue) * 100
-        console.log('Net Profit Margin:', netMarginPercentage.toFixed(1), '%')
+        console.log(`Net Profit Margin: ${netMarginPercentage.toFixed(1)}%`);
 
     // Calculate all asset values:
         let totalAssets = 0;   
@@ -78,7 +78,7 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
 
     // Calculate working liabilities ratio:
         const workingLiabilities = (totalAssets / totalLiabilities) * 100;
-        console.log('Working Liabilities Ratio:', workingLiabilities.toFixed(1), '%')
+        console.log(`Working Liabilities Ratio: ${workingLiabilities.toFixed(1)}%`);
 
 } catch (err) {
     console.error('Error parsing JSON:', err);
