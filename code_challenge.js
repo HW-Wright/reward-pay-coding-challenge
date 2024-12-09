@@ -1,16 +1,17 @@
 const fs = require('fs');
 
-// Read JSON file
-
 fs.readFile('./data.json', 'utf8', (err, jsonString) => {
     if (err) {
         console.error('Error reading .JSON file', err);
         return;
     }
-// Extract revenue and calulate the total:
+
+    let totalRevenue = 0;
+    let totalExpenses = 0;
+    let salesAndDebit = 0;
+
     try {
         const data = JSON.parse(jsonString);
-        let totalRevenue = 0;
         
         data.data.forEach(item => {
             if (item.account_category === 'revenue') {
@@ -18,13 +19,6 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
             }
         });
         console.log('Total Revenue:', totalRevenue);
-    } catch (err) {
-        console.error('Error parsing JSON:', err);
-    }
-// Extract the expenses vales and calculate the total:
-    try {
-        const data = JSON.parse(jsonString);
-        let totalExpenses = 0;
 
         data.data.forEach(item => {
             if (item.account_category === 'expense') {
@@ -32,6 +26,15 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
             }
         });
         console.log('Total Expenses:', totalExpenses);
+
+        data.data.forEach(item => {
+            if (item.value_type === 'sales' || item.value_type === 'debit') {
+                salesAndDebit += item.total_value;
+            }
+        });
+        console.log(salesAndDebit)
+        const margin = salesAndDebit / totalRevenue;
+        console.log('Gross Profit Margin:', margin);
     } catch (err) {
         console.error('Error parsing JSON:', err);
     }
