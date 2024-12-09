@@ -9,10 +9,8 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
     let totalRevenue = 0;
     let totalExpenses = 0;
     let salesAndDebit = 0;
-    let totalAssets = 0;
     let assetsToSubtract = 0;
     let assetsToAdd = 0;
-    let totalLiabilities = 0;
     let liabilitiesToAdd = 0;
     let liabilitiesToSubtract = 0;
     let workingLiabilities = 0;
@@ -34,7 +32,7 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
                 totalExpenses += item.total_value;
             }
         });
-        console.log('Total Expenses:', totalExpenses);
+        console.log('Total Expenses: $', totalExpenses);
     
     // Extract and sum sales and debit values to divide by revenue:
         data.data.forEach(item => {
@@ -51,6 +49,7 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
         console.log('Net Profit Margin:', netMarginPercentage.toFixed(1), '%')
 
     // Calculate all asset values:
+        let totalAssets = 0;   
         data.data.forEach(item => {
             if (item.account_category === 'liability' || item.value_type === 'debit' || 
                 ['current', 'bank', 'current_accounts_receivable'].includes(item.account_type)) {
@@ -60,10 +59,11 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
                 ['current', 'bank', 'current_accounts_receivable'].includes(item.account_type)) {
                     assetsToSubtract -= item.total_value
                 }
-            const totalAssets = assetsToAdd - assetsToSubtract;
         });
+        totalAssets = assetsToAdd - assetsToSubtract;
 
     // Calculate all liability values:
+        let totalLiabilities = 0;
         data.data.forEach(item => {
             if (item.account_category === 'liability' || item.value_type === 'credit' || 
                 ['current', 'current_accounts_payable'].includes(item.account_type)) {
@@ -73,12 +73,12 @@ fs.readFile('./data.json', 'utf8', (err, jsonString) => {
                 ['current', 'bank', 'current_accounts_payable'].includes(item.account_type)) {
                     liabilitiesToSubtract -= item.total_value
                 }
-            const totalLiabilities = liabilitiesToAdd - liabilitiesToSubtract;
         });
+        totalLiabilities = liabilitiesToAdd - liabilitiesToSubtract;
 
     // Calculate working liabilities ratio:
         const workingLiabilities = (totalAssets / totalLiabilities) * 100;
-        console.lot('Working Liabilities Ratio:', workingLiabilities, '%')
+        console.log('Working Liabilities Ratio:', workingLiabilities.toFixed(1), '%')
 
 } catch (err) {
     console.error('Error parsing JSON:', err);
